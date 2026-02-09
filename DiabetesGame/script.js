@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (userInput === Answer) {
                 word.isCorrect = true;
-                updateScoreOnServer(CORRECT_WORD_POINTS);
+                // updateScoreOnServer(CORRECT_WORD_POINTS);
                 markWordAsCorrect(word);
             } else {
                 allWordsCorrect = false;
