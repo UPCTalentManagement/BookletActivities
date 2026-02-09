@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anti-Diabetes Crossword Challenge</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="loading" class="modal-overlay active">
+        <div class="loading-text modal-content" >جاري التحميل...</div>
+    </div>
+
+    <!-- <div id="group-selection-modal" class="modal-overlay active">
+        <div class="modal-content">
+            <h2>كلمات السكر المتقاطعة 💉</h2>
+            <p>اختار الجروب ثم أبدأ. الجروب الذى سيحصل على أعلى نقاط يفوز!</p>
+            <div class="group-buttons">
+                <button class="group-btn" data-group="Group 1">Group 1</button>
+                <button class="group-btn" data-group="Group 2">Group 2</button>
+                <button class="group-btn" data-group="Group 3">Group 3</button>
+                <button class="group-btn" data-group="Group 4">Group 4</button>
+                <button class="group-btn" data-group="Group 5">Group 5</button>
+            </div>
+        </div>
+    </div> -->
+
+    <div id="win-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>مبروك! 🎉</h2>
+            <p>جهودك ساعدت <strong id="current-group-name"></strong> في إكمال الكلمات المتقاطعة!</p>
+            <!-- <button id="restart-btn">Play Again</button> -->
+        </div>
+    </div>
+
+    <div id="game-container">
+        <header class="game-header">
+            <div class="scoreboard">
+                <div id="current-group"></div>
+                <div id="timer">00:00</div>
+            </div>
+            <h1>أدوية السكر المتقاطعة</h1>
+        </header>
+
+        <main class="game-area">
+            <div class="clues-container">
+                <h3>أفقى</h3>
+                <ul id="across-clues"></ul>
+            </div>
+
+            <div id="grid-container">
+                </div>
+
+            <div class="clues-container">
+                <h3>رأسى</h3>
+                <ul id="down-clues"></ul>
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

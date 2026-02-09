@@ -1,0 +1,219 @@
+/* style.css */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --background-color: #f4f7f6;
+    --grid-bg: #ffffff;
+    --font-color: #333;
+    --correct-color: #28a745;
+    --incorrect-color: #dc3545;
+    --focus-color: #ffc107;
+    --cell-size: 40px;
+    --font-family: 'Poppins', sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--font-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* --- Modals --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-overlay.active {
+    display: flex;
+}
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
+.modal-content h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+.group-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+.group-btn, #restart-btn {
+    padding: 12px 25px;
+    border: none;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.group-btn:hover, #restart-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+
+/* --- Game Layout --- */
+#game-container {
+    width: 95%;
+    max-width: 1200px;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    gap: 20px;
+}
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 10px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.game-header h1 {
+    color: var(--primary-color);
+    margin: 0;
+    font-size: 1.8em;
+}
+.scoreboard {
+    display: flex;
+    gap: 20px;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+#current-group {
+    color: var(--secondary-color);
+}
+#timer {
+    color: var(--primary-color);
+}
+
+.game-area {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+/* --- Crossword Grid --- */
+#grid-container {
+    display: grid;
+    grid-template-columns: repeat(15, var(--cell-size)); /* Example: 15x15 grid */
+    border: 2px solid #333;
+    background: var(--grid-bg);
+}
+.grid-cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    position: relative;
+}
+.grid-cell input {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 1.4em;
+    text-transform: uppercase;
+    font-weight: 700;
+    background-color: white;
+    outline: none;
+    caret-color: var(--primary-color);
+}
+.grid-cell input:focus {
+    box-shadow: 0 0 0 3px var(--focus-color);
+    z-index: 10;
+}
+.grid-cell input.blacked-out {
+    background-color: #333;
+    border: 1px solid #333;
+    pointer-events: none;
+}
+.grid-cell .clue-number {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    font-size: 0.7em;
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+/* Cell highlighting */
+.highlight, .highlight:focus {
+    background-color: #e9f5ff;
+}
+.current-word {
+    background-color: #d0eaff;
+}
+
+
+/* --- Clues --- */
+.clues-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.clues-container h3 {
+    margin-top: 0;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+}
+.clues-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
+.clues-container li {
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.clues-container li:hover {
+    background-color: #f0f0f0;
+}
+.clues-container li.active-clue {
+    background-color: var(--focus-color);
+    font-weight: 600;
+}
+
+
+/* --- Responsive Design --- */
+@media (max-width: 992px) {
+    .game-area {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 768px) {
+    :root { --cell-size: 30px; }
+    .game-header h1 { font-size: 1.2em; }
+    .scoreboard { font-size: 1em; }
+}
