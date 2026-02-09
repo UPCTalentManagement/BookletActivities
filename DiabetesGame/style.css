@@ -205,7 +205,31 @@ body {
     font-weight: 600;
 }
 
-
+#winModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    display: none;
+    z-index: 1001;
+}
+#restart-btn {
+    margin-top: 20px;
+    padding: 12px 25px;
+    border: none;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
 /* --- Responsive Design --- */
 @media (max-width: 992px) {
     .game-area {

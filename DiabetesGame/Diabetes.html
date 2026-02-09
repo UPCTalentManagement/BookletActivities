@@ -28,13 +28,13 @@
         </div>
     </div> -->
 
-    <div id="win-modal" class="modal-overlay">
+    <!-- <div id="win-modal" class="modal-overlay">
         <div class="modal-content">
             <h2>مبروك! 🎉</h2>
-            <p>جهودك ساعدت <strong id="current-group-name"></strong> في إكمال الكلمات المتقاطعة!</p>
-            <!-- <button id="restart-btn">Play Again</button> -->
+            <p>لقد اكملت اللعبة فى  <strong id="final-time"></strong></p>
+            <button id="restart-btn">Play Again</button>
         </div>
-    </div>
+    </div> -->
 
     <div id="game-container">
         <header class="game-header">
@@ -60,7 +60,12 @@
             </div>
         </main>
     </div>
-    
+    <div id="winModal" class="hidden" style="display: none;">
+        <h2>مبروك!🎉</h2>
+        <p>لقد اكتملت الكلمات المتقاطعة في <strong id="final-time"></strong>!</p>
+        <button id="restart-btn">لعب مرة أخرى</button>
+    </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

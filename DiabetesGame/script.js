@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const downCluesList = document.getElementById('down-clues');
     const groupSelectionModal = document.getElementById('group-selection-modal');
     const winModal = document.getElementById('win-modal');
+    const winnModal = document.getElementById('winModal');
     const gameContainer = document.getElementById('game-container');
     const loadingScreen = document.getElementById('loading');
     // const currentGroupEl = document.getElementById('current-group');
@@ -286,10 +287,14 @@ document.addEventListener('DOMContentLoaded', () => {
     //     winModal.classList.add('active');
     // }
     function winGame() {
-    clearInterval(timerInterval);
-    const finalTime = timerEl.textContent;
-    document.getElementById('final-time').textContent = finalTime;
-    winModal.classList.add('active');
+        clearInterval(timerInterval);
+        document.getElementById('final-time').textContent = timerEl.textContent;
+        const finalTime = timerEl.textContent;
+        document.getElementById('final-time').textContent = finalTime;
+        // winModal.classList.add('active');
+        // winModal.style.display = 'block';   
+        winnModal.classList.add('active');
+        winnModal.style.display = 'block';
 
     // *** ADD THIS FETCH CALL to log the time ***
     // fetch(`${GAS_URL}?action=setFinalTime`, {
