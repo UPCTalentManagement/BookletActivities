@@ -217,7 +217,7 @@
         .option-card img {
             width: 100%;
             height: 100px;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 8px;
             margin-bottom: 10px;
             pointer-events: none; /* Prevent image drag interference */
@@ -529,7 +529,7 @@
             state.isProcessing = false;
             gameElements.feedbackArea.innerHTML = ''; // Clear old messages
             gameElements.submitBtn.disabled = false;
-            gameElements.submitBtn.textContent = "Confirm Answer";
+            gameElements.submitBtn.textContent = "تأكيد الاجابة";
             gameElements.submitBtn.style.backgroundColor = ""; // Reset color
 
             const q = questionsData[state.currentQuestionIndex];
@@ -675,18 +675,18 @@
             let rating = "";
             let message = "";
 
-            if (state.score >= 65) { // Max is 75 (5*15)
-                rating = "Expert Level ⭐⭐⭐";
-                message = `Fantastic job, ${state.playerName}! Your attention to detail is outstanding. Keep up the great work!`;
-            } else if (state.score >= 40) {
-                rating = "Intermediate Level ⭐⭐";
-                message = `Well done, ${state.playerName}! You have a good grasp of the concepts. A little more practice will make you perfect.`;
-            } else if (state.score > 0) {
-                rating = "Beginner Level ⭐";
-                message = `Good effort, ${state.playerName}. Don't get discouraged! Review the materials and try again to improve your score.`;
+            if (state.score >= 70) { // Max is 75 (5*15)
+                rating = "ممتاز ⭐⭐⭐";
+                message = `عمل رائع يا د, ${state.playerName}! دقة ممتازة واجابات صحيحة!`;
+            } else if (state.score >= 50) {
+                rating = "جيد جدًا ⭐⭐";
+                message = `احسنت, ${state.playerName}! لقد كانت اجابات موفقه .  ولكن مع القليل من التدريب يمكنك الوصول لمستوى أعلى.`;
+            } else if (state.score > 35) {
+                rating = "لا بأس ⭐";
+                message = `احسنت, ${state.playerName}! حاول مرة أخرى وتحسن في الاجابات.`;
             } else {
-                rating = "Needs Practice";
-                message = `It seems like a tough round, ${state.playerName}. Take your time to understand the items and try again. You can do it!`;
+                rating = "تحتاج إلى تحسين 😕";
+                message = `يبدوا انك بحاجة للمراجعة, ${state.playerName}. خذ وقت فى التحسن والمراجعة وحاول مجددًا!`;
             }
 
             endElements.finalRating.textContent = rating;
