@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hypertension Treatment Options Activity</title>
+    <style>
+        /* =========================================
+           CSS VARIABLES & RESET
+           ========================================= */
+        :root {
+            --primary-color: #4F46E5; /* Indigo */
+            --primary-hover: #4338ca;
+            --secondary-color: #10B981; /* Emerald */
+            --error-color: #EF4444; /* Red */
+            --bg-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --border-radius: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* =========================================
+           LAYOUT & CONTAINERS
+           ========================================= */
+        #app-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        main {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =========================================
+           INPUT & BUTTONS
+           ========================================= */
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-restart {
+            background-color: var(--secondary-color);
+        }
+        .btn-restart:hover {
+            background-color: #059669;
+        }
+
+        /* =========================================
+           GAME SCREEN
+           ========================================= */
+        .progress-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 10px;
+            background-color: #E5E7EB;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--secondary-color);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .option-card {
+            border: 2px solid #E5E7EB;
+            border-radius: var(--border-radius);
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            position: relative;
+            background: white;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .option-card.selected {
+            border-color: var(--primary-color);
+            background-color: #EEF2FF;
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+
+        .option-card img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            pointer-events: none; /* Prevent image drag interference */
+        }
+
+        .option-card .product-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            pointer-events: none;
+        }
+
+        /* Feedback Area */
+        .feedback-area {
+            min-height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .submit-btn-container {
+            text-align: center;
+        }
+
+        /* Shake Animation for Errors */
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* =========================================
+           END SCREEN
+           ========================================= */
+        .result-content {
+            text-align: center;
+            width: 100%;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 20px 0;
+        }
+
+        .feedback-message {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .result-details {
+            background: #F9FAFB;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #E5E7EB;
+        }
+        
+        .result-details p {
+            margin: 5px 0;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .question-text {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+        <header>
+            <h1>Hypertension Treatment Options Activity</h1>
+        </header>
+
+        <main>
+            <!-- 1. LOGIN SCREEN -->
+            <section id="login-screen" class="fade-in">
+                <div style="width: 100%; max-width: 400px; text-align: center;">
+                    <h2 style="margin-bottom: 20px; color: var(--text-main);">أهلا بيك يا دكتور</h2>
+                    <p style="margin-bottom: 20px; color: var(--text-muted);">ادخل اسمك من فضلك</p>
+                    <input type="text" id="player-name-input" placeholder="Type your name here..." autocomplete="off">
+                    <button id="start-btn" class="btn" style="width: 100%;">ابدأ التعلم</button>
+                    <p id="login-error" style="color: var(--error-color); margin-top: 10px; font-size: 0.9rem;" class="hidden">الاسم غير صحيح.</p>
+                </div>
+            </section>
+
+            <!-- 2. GAME SCREEN -->
+            <section id="game-screen" class="hidden">
+                <!-- Progress Indicator -->
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Question <span id="current-q-num">1</span> of 5</span>
+                        <span>Score: <span id="current-score">0</span></span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="progress-bar" class="progress-bar-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Question Content -->
+                <h3 id="question-text" class="question-text">Loading question...</h3>
+
+                <!-- Options Grid -->
+                <div id="options-grid" class="options-grid">
+                    <!-- Options injected by JS -->
+                </div>
+
+                <!-- Feedback Message Area -->
+                <div id="feedback-area" class="feedback-area"></div>
+
+                <!-- Submit Button -->
+                <div class="submit-btn-container">
+                    <button id="submit-answer-btn" class="btn">تأكيد الاجابة</button>
+                </div>
+            </section>
+
+            <!-- 3. END SCREEN -->
+            <section id="end-screen" class="hidden">
+                <div class="result-content fade-in">
+                    <h2>انتهى النشاط!</h2>
+                    
+                    <div class="score-display">
+                        <span id="final-score">0</span> <span style="font-size: 1.5rem;">pts</span>
+                    </div>
+
+                    <div class="result-details">
+                        <p><strong>Learner:</strong> <span id="final-name">Guest</span></p>
+                        <p><strong>Performance:</strong> <span id="final-rating">-</span></p>
+                    </div>
+
+                    <p id="final-message" class="feedback-message">ممتاز لقد اكملت النشاط بنجاح!</p>
+
+                    <button id="restart-btn" class="btn btn-restart">العب مرة أخرى</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        /**
+         * Educational Game Application Logic
+         * Implements game loop, scoring, state management, and UI updates.
+         */
+
+        // --- Game Data: Questions ---
+        // Using picsum.photos with specific seeds for consistent images.
+        const questionsData = [
+            {
+                id: 1,
+                text: "Diureticsقم باختيار الادوية التى تعتبر ضمن فئة الـ ",
+                options: [
+                    { id: 'opt1', name: 'MICARDIS', img: '1/1.png', isCorrect: false },
+                    { id: 'opt2', name: 'LASIX', img: '1/2.png', isCorrect: true },
+                    { id: 'opt3', name: 'MONOZAID', img: '1/3.png', isCorrect: false },
+                    { id: 'opt4', name: 'ALDACTON', img: '1/4.png', isCorrect: true },
+                    { id: 'opt5', name: 'LOTNES', img: '1/5.png', isCorrect: false },
+                    { id: 'opt6', name: 'NATRILIX', img: '1/6.png', isCorrect: true },
+                    { id: 'opt7', name: 'SARTAN', img: '1/8.png', isCorrect: false },
+                    { id: 'opt8', name: 'VASCODIPIN', img: '1/9.png', isCorrect: false },
+                    { id: 'opt9', name: 'TABUVAN', img: '1/7.png', isCorrect: false }
+                ]
+            },
+            {
+                id: 2,
+                text:  "Diureticsقم باختيار الادوية التى تعتبر ضمن فئة الـ ",
+                options: [
+                    { id: 'opt1', name: 'RENITEC', img: '2/1.png', isCorrect: true },
+                    { id: 'opt2', name: 'CAPOCARD', img: '2/2.png', isCorrect: true },
+                    { id: 'opt3', name: 'LESINO', img: '2/3.png', isCorrect: false },
+                    { id: 'opt4', name: 'TABUVAN', img: '2/4.png', isCorrect: false },
+                    { id: 'opt5', name: 'NATRILIX', img: '2/5.png', isCorrect: false },
+                    { id: 'opt6', name: 'LASIX', img: '2/6.png', isCorrect: false },
+                    { id: 'opt7', name: 'LOTNES', img: '2/7.png', isCorrect: false },
+                    { id: 'opt8', name: 'MONOZAID', img: '2/8.png', isCorrect: false }
+                ]
+            },
+            {
+                id: 3,
+                text: "Diureticsقم باختيار الادوية التى تعتبر ضمن فئة الـ ",
+                options: [
+                    { id: 'opt1', name: 'MICARDIS', img: '3/1.png', isCorrect: true },
+                    { id: 'opt2', name: 'LASIX', img: '3/2.png', isCorrect: false },
+                    { id: 'opt3', name: 'MONOZAID', img: '3/3.png', isCorrect: false }
+                ]
+            },
+            {
+                id: 4,
+                text: "Diureticsقم باختيار الادوية التى تعتبر ضمن فئة الـ ",
+                options: [
+                    { id: 'opt1', name: 'VASCODIPIN', img: '4/1.png', isCorrect: true },
+                    { id: 'opt2', name: 'LOTNES', img: '4/2.png', isCorrect: false },
+                    { id: 'opt3', name: 'NEBILET', img: '4/3.png', isCorrect: false }, 
+                    { id: 'opt4', name: 'BIVONEB', img: '4/4.png', isCorrect: false }, 
+                    { id: 'opt5', name: 'LOPRESSOR', img: '4/5.png', isCorrect: false }, 
+                    { id: 'opt6', name: 'AMLOPIN', img: '4/6.png', isCorrect: false }, 
+                    { id: 'opt7', name: 'CONCOR', img: '4/7.png', isCorrect: false }, 
+                    { id: 'opt8', name: 'CARDEX', img: '4/8.png', isCorrect: true }
+                ]
+            },
+            {
+                id: 5,
+                text: "Diureticsقم باختيار الادوية التى تعتبر ضمن فئة الـ ",
+                options: [
+                    { id: 'opt1', name: 'VASCODIPIN', img: '5/1.png', isCorrect: true },
+                    { id: 'opt2', name: 'LOTNES', img: '5/2.png', isCorrect: false },
+                    { id: 'opt3', name: 'NEBILET', img: '5/3.png', isCorrect: false },
+                    { id: 'opt4', name: 'ALDACTONE', img: '5/4.png', isCorrect: false },
+                    { id: 'opt5', name: 'LOPRESSOR', img: '5/5.png', isCorrect: false },
+                    { id: 'opt6', name: 'AMLOPIN', img: '5/6.png', isCorrect: false },
+                    { id: 'opt7', name: 'CONCOR', img: '5/7.png', isCorrect: false },
+                    { id: 'opt8', name: 'CARDEX', img: '5/8.png', isCorrect: true }
+                    { id: 'opt8', name: 'NATRILIX', img: '5/9.png', isCorrect: true }
+                ]
+            }
+        ];
+
+        // --- State Management ---
+        const state = {
+            playerName: '',
+            currentQuestionIndex: 0,
+            score: 0,
+            attempts: 1, // Attempts for the CURRENT question
+            selectedOptions: new Set(), // Stores IDs of selected options
+            isProcessing: false // Prevent double clicks during transition
+        };
+
+        // --- DOM Elements ---
+        const screens = {
+            login: document.getElementById('login-screen'),
+            game: document.getElementById('game-screen'),
+            end: document.getElementById('end-screen')
+        };
+
+        const loginInput = document.getElementById('player-name-input');
+        const loginError = document.getElementById('login-error');
+        const startBtn = document.getElementById('start-btn');
+
+        const gameElements = {
+            currentQNum: document.getElementById('current-q-num'),
+            currentScore: document.getElementById('current-score'),
+            progressBar: document.getElementById('progress-bar'),
+            questionText: document.getElementById('question-text'),
+            optionsGrid: document.getElementById('options-grid'),
+            feedbackArea: document.getElementById('feedback-area'),
+            submitBtn: document.getElementById('submit-answer-btn')
+        };
+
+        const endElements = {
+            finalScore: document.getElementById('final-score'),
+            finalName: document.getElementById('final-name'),
+            finalRating: document.getElementById('final-rating'),
+            finalMessage: document.getElementById('final-message'),
+            restartBtn: document.getElementById('restart-btn')
+        };
+
+        // --- Initialization & Event Listeners ---
+
+        function init() {
+            startBtn.addEventListener('click', handleStartGame);
+            gameElements.submitBtn.addEventListener('click', handleSubmitAnswer);
+            endElements.restartBtn.addEventListener('click', handleRestartGame);
+        }
+
+        // --- Game Logic Functions ---
+
+        function handleStartGame() {
+            const name = loginInput.value.trim();
+            if (!name) {
+                loginError.classList.remove('hidden');
+                return;
+            }
+            
+            state.playerName = name;
+            state.score = 0;
+            state.currentQuestionIndex = 0;
+            
+            switchScreen('game');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            // Reset state for new question
+            state.attempts = 1;
+            state.selectedOptions.clear();
+            state.isProcessing = false;
+            gameElements.feedbackArea.innerHTML = ''; // Clear old messages
+            gameElements.submitBtn.disabled = false;
+            gameElements.submitBtn.textContent = "Confirm Answer";
+            gameElements.submitBtn.style.backgroundColor = ""; // Reset color
+
+            const q = questionsData[state.currentQuestionIndex];
+
+            // Update UI text
+            gameElements.currentQNum.textContent = state.currentQuestionIndex + 1;
+            gameElements.currentScore.textContent = state.score;
+            
+            // Update Progress Bar
+            const progressPercent = ((state.currentQuestionIndex) / questionsData.length) * 100;
+            gameElements.progressBar.style.width = `${progressPercent}%`;
+
+            // Set Question Text
+            gameElements.questionText.textContent = q.text;
+
+            // Render Options
+            gameElements.optionsGrid.innerHTML = '';
+            q.options.forEach(opt => {
+                const card = document.createElement('div');
+                card.className = 'option-card';
+                card.dataset.id = opt.id;
+                card.onclick = () => toggleOptionSelection(card, opt.id);
+
+                const img = document.createElement('img');
+                img.src = opt.img;
+                img.alt = opt.name;
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'product-name';
+                nameSpan.textContent = opt.name;
+
+                card.appendChild(img);
+                card.appendChild(nameSpan);
+                gameElements.optionsGrid.appendChild(card);
+            });
+        }
+
+        function toggleOptionSelection(cardElement, optionId) {
+            if (state.isProcessing) return; // Lock input if processing answer
+
+            if (state.selectedOptions.has(optionId)) {
+                state.selectedOptions.delete(optionId);
+                cardElement.classList.remove('selected');
+            } else {
+                state.selectedOptions.add(optionId);
+                cardElement.classList.add('selected');
+            }
+        }
+
+        function handleSubmitAnswer() {
+            if (state.isProcessing) return;
+            if (state.selectedOptions.size === 0) {
+                // Shake button if nothing selected
+                gameElements.submitBtn.classList.add('error-message');
+                setTimeout(() => gameElements.submitBtn.classList.remove('error-message'), 500);
+                return;
+            }
+
+            const currentQ = questionsData[state.currentQuestionIndex];
+            
+            // Determine correctness
+            // 1. Get all correct option IDs for this question
+            const correctIds = currentQ.options.filter(o => o.isCorrect).map(o => o.id);
+            
+            // 2. Check if the set of selected IDs matches the set of correct IDs
+            const selectedIdsArray = Array.from(state.selectedOptions);
+            const isCorrect = checkArraysMatch(selectedIdsArray, correctIds);
+
+            if (isCorrect) {
+                handleCorrectAnswer();
+            } else {
+                handleWrongAnswer();
+            }
+        }
+
+        function checkArraysMatch(arr1, arr2) {
+            if (arr1.length !== arr2.length) return false;
+            // Sort both to compare content regardless of order
+            const sorted1 = [...arr1].sort();
+            const sorted2 = [...arr2].sort();
+            return sorted1.every((val, index) => val === sorted2[index]);
+        }
+
+        function handleCorrectAnswer() {
+            state.isProcessing = true;
+
+            // Calculate Score
+            let pointsEarned = 0;
+            if (state.attempts === 1) pointsEarned = 15;
+            else if (state.attempts === 2) pointsEarned = 10;
+            else if (state.attempts === 3) pointsEarned = 5;
+            // else 0 points (4th attempt or more)
+
+            state.score += pointsEarned;
+            gameElements.currentScore.textContent = state.score;
+
+            // Visual Feedback
+            gameElements.feedbackArea.innerHTML = `
+                <div style="color: var(--secondary-color); font-weight:bold; font-size:1.1rem;">
+                    ${pointsEarned > 0 ? 'Correct! +' + pointsEarned : 'Correct!'}
+                </div>
+            `;
+            gameElements.submitBtn.textContent = "Moving to next...";
+            gameElements.submitBtn.disabled = true;
+
+            // Delay for next question
+            setTimeout(() => {
+                state.currentQuestionIndex++;
+                if (state.currentQuestionIndex < questionsData.length) {
+                    loadQuestion();
+                } else {
+                    finishGame();
+                }
+            }, 1500);
+        }
+
+        function handleWrongAnswer() {
+            state.attempts++;
+            
+            // Show specific error message as requested
+            gameElements.feedbackArea.innerHTML = `
+                <div class="error-message">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    حاول مرة أخرى
+                </div>
+            `;
+            
+            // Optional: Visual cue on button
+            gameElements.submitBtn.style.backgroundColor = "var(--error-color)";
+            setTimeout(() => {
+                gameElements.submitBtn.style.backgroundColor = "";
+            }, 500);
+        }
+
+        function finishGame() {
+            switchScreen('end');
+            
+            // Fill End Screen Data
+            endElements.finalName.textContent = state.playerName;
+            endElements.finalScore.textContent = state.score;
+
+            // Motivational Feedback Logic
+            let rating = "";
+            let message = "";
+
+            if (state.score >= 65) { // Max is 75 (5*15)
+                rating = "Expert Level ⭐⭐⭐";
+                message = `Fantastic job, ${state.playerName}! Your attention to detail is outstanding. Keep up the great work!`;
+            } else if (state.score >= 40) {
+                rating = "Intermediate Level ⭐⭐";
+                message = `Well done, ${state.playerName}! You have a good grasp of the concepts. A little more practice will make you perfect.`;
+            } else if (state.score > 0) {
+                rating = "Beginner Level ⭐";
+                message = `Good effort, ${state.playerName}. Don't get discouraged! Review the materials and try again to improve your score.`;
+            } else {
+                rating = "Needs Practice";
+                message = `It seems like a tough round, ${state.playerName}. Take your time to understand the items and try again. You can do it!`;
+            }
+
+            endElements.finalRating.textContent = rating;
+            endElements.finalMessage.textContent = message;
+            
+            // Fill Progress Bar to 100%
+            gameElements.progressBar.style.width = `100%`;
+        }
+
+        function handleRestartGame() {
+            // Reset State
+            state.currentQuestionIndex = 0;
+            state.score = 0;
+            state.playerName = ''; // Will prompt for name again or keep it? Usually prompt again or allow restart. Let's go back to login for fresh session.
+            
+            switchScreen('login');
+            loginInput.value = '';
+            loginError.classList.add('hidden');
+        }
+
+        // --- Utility Functions ---
+
+        function switchScreen(screenName) {
+            // Hide all screens
+            Object.values(screens).forEach(s => s.classList.add('hidden'));
+            
+            // Show target screen
+            screens[screenName].classList.remove('hidden');
+            
+            // Re-trigger fade animation
+            screens[screenName].classList.remove('fade-in');
+            void screens[screenName].offsetWidth; // Trigger reflow
+            screens[screenName].classList.add('fade-in');
+        }
+
+        // Start App
+        init();
+
+    </script>
+</body>
+</html>
